@@ -48,9 +48,13 @@ class FocusToDo:
         logger.debug("Cookies saved")
         return True
 
-    def login(self, account: str, password: str, client: str = "Chrome") -> bool:
+    def login(self,
+              account: str,
+              password: str,
+              client: str = "Chrome") -> bool:
         # NOTE: Will be described later when
-        # the process changes depending on the presence or absence of a session.
+        # the process changes depending on
+        # the presence or absence of a session.
         if self.session_data is None:
             return self._auth(account, password, client)
         return self._auth(account, password, client)
