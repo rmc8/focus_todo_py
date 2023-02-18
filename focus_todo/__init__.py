@@ -23,19 +23,6 @@ class FocusToDo:
             additional_headers=additional_headers,
         )
 
-    def _login_session(self):
-        logger.debug("Login with cookies")
-        logger.debug("Set cookies in session")
-        self.client.set_cookies(
-            requests.utils.cookiejar_from_dict(
-                self.session_data["session_cookies"])
-        )
-        self.client.set_cookies(
-            requests.utils.cookiejar_from_dict(
-                self.session_data["login_cookies"])
-        )
-        logger.debug("Get page data with cookies")
-
     def _auth(self, account: str, password: str, client: str):
         logger.debug(f"login: {account}")
         logger.debug(f"login: {client}")
@@ -49,11 +36,28 @@ class FocusToDo:
             add_url=self.path.login,
             params=params,
         )
-        # TODO:Describe the process of saving sessions
-        print(response.status_code)
-        print(response.json())
+        if response.status_code != 200:
+            logger.debug("Login Failed")
+            return False
+        logger.debug("Login Success")
+        self.session_data = {
+            "session_cookies": requests.utils.dict_from_cookiejar(
+                self.client.get_cookies()
+            ),
+        }
+        logger.debug("Cookies saved")
+        return True
 
-    def login(self, account: str, password: str, client: str = "Chrome"):
+    def login(self, account: str, password: str, client: str = "Chrome") -> bool:
+        # NOTE: Will be described later when
+        # the process changes depending on the presence or absence of a session.
         if self.session_data is None:
             return self._auth(account, password, client)
-        return self._login_session()
+        return self._auth(account, password, client)
+
+    def logout(self, client: str = "chrome") -> bool:
+        path: str = self.path.logout + client
+        response = self.client.get(
+            add_url=path,
+        )
+        return response.status_code == 200
