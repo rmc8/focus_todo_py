@@ -12,14 +12,16 @@ logger = getLogger(__name__)
 
 class ApiClient:
     BASE_URL: str = "oversea.focustodo.net"
-    ua: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
+    ua: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " \
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
     default_headers: dict = {
         "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
         "sec-ch-ua-platform": "Windows",
         "user-agent": ua,
     }
 
-    def __init__(self, session, headers: Optional[dict] = None, additional_headers: Optional[dict] = None):
+    def __init__(self, session, headers: Optional[dict] = None,
+                 additional_headers: Optional[dict] = None):
         self.session = session
         self.headers = self.default_headers.copy()
         if type(headers) is dict:
@@ -49,12 +51,15 @@ class ApiClient:
             headers.update(additional_headers)
         return headers
 
-    def _get_req_info(self, additional_headers: Optional[dict], add_url: Optional[str]) -> Tuple[dict, str]:
+    def _get_req_info(self, additional_headers: Optional[dict],
+                      add_url: Optional[str]) -> Tuple[dict, str]:
         headers = self._get_headers(additional_headers=additional_headers)
         url: str = self.url(add_url)
         return headers, url
 
-    def get(self, add_url: Optional[str] = None, additional_headers: Optional[dict] = None, params: Optional[dict] = None):
+    def get(self, add_url: Optional[str] = None,
+            additional_headers: Optional[dict] = None,
+            params: Optional[dict] = None):
         headers, url = self._get_req_info(additional_headers, add_url)
         logger.debug(f"URL: {url}")
         logger.debug(f"Headers: {headers}")
@@ -78,8 +83,11 @@ class ApiClient:
                 ) from err
             raise FocusToDoConnectionError(err) from err
 
-    def post(self, add_url: Optional[str] = None, additional_headers: Optional[dict] = None,
-             params: Optional[dict] = None, data: Optional[str] = None, files: Optional[str] = None):
+    def post(self, add_url: Optional[str] = None,
+             additional_headers: Optional[dict] = None,
+             params: Optional[dict] = None,
+             data: Optional[str] = None,
+             files: Optional[str] = None):
         headers, url = self._get_req_info(additional_headers, add_url)
         logger.debug(f"URL: {url}")
         logger.debug(f"Headers: {headers}")
