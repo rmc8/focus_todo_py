@@ -12,7 +12,8 @@ logger = getLogger(__name__)
 
 
 class FocusToDo:
-    def __init__(self, session_data=None, 
+    def __init__(self,
+                 session_data=None,
                  additional_headers: Optional[dict] = None):
         self.session_data = session_data
         self.path = FocusToDoUrlPath()
