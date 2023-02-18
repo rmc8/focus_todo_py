@@ -40,7 +40,7 @@ class ApiClient:
         self.session.cookies.clear()
 
     def url(self, add_url: Optional[str] = None) -> str:
-        path: str = f"https:{self.BASE_URL}"
+        path: str = f"https://{self.BASE_URL}"
         if type(add_url) is str:
             path += f"/{add_url}"
         return path
@@ -94,7 +94,12 @@ class ApiClient:
         logger.debug(f"Data: {data}")
         try:
             response = self.session.post(
-                url, data=data, headers=headers, params=params, files=files)
+                url,
+                data=data,
+                headers=headers,
+                params=params,
+                files=files
+            )
             response.raise_for_status()
             return response
         except Exception as err:
